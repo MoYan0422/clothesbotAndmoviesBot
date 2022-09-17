@@ -1,0 +1,23 @@
+Set-ExecutionPolicy RemoteSigned
+az login
+
+az webapp up --sku F1 --name wuyuhsi-moive-bot --os-type windows 
+
+https://dialogflow.cloud.google.com/
+
+
+//功課
+https://hospitable-top-f1b.notion.site/EEIT49-Azure-Chatbot-d5e43749584b4e12bbb8dd12429017f5
+
+//Moviedb_API
+https://www.themoviedb.org/settings/api
+
+//將物件轉成JSON格式
+JSON.stringify()
+
+
+//az webapp api
+https://learn.microsoft.com/zh-tw/cli/azure/webapp?view=azure-cli-latest
+
+//azure
+https://portal.azure.com/#home
