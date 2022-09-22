@@ -56,7 +56,7 @@ app.post('/webhook', function (req, res) {
 
     });
 });
-function sendCards(body, res) {
+function sendCardsSingleCard(body, res) {
     console.log("[sendCards] in");
     console.log(JSON.stringify(body))
     var thisFulfillmentMessages = [];
@@ -74,4 +74,124 @@ function sendCards(body, res) {
         thisFulfillmentMessages.push(thisObject);
     }
     res.json({ fulfillmentMessages: thisFulfillmentMessages });
+}
+function sendCards(body, res) {
+    console.log('[sendCards] In');
+    var thisFulfillmentMessages = [];
+    // https://developers.line.biz/en/reference/messaging-api/#location-message
+    var stickerObject = {
+        payload: {
+            line:
+            {
+                type: "sticker",
+                packageId: "6359",
+                stickerId: "11069849"
+            }
+
+
+        }
+    }
+    thisFulfillmentMessages.push(stickerObject);
+    var videoObject = {
+        payload: {
+            line:
+            {
+                type: "video",
+                originalContentUrl: "https://example.com/original.mp4",
+                previewImageUrl: "https://example.com/preview.jpg",
+                trackingId: "track-id"
+            }
+
+
+
+        }
+    }
+
+    thisFulfillmentMessages.push(videoObject);
+
+    var mapObject = {
+        payload: {
+            line:
+            {
+                "type": "location",
+                "title": "my location",
+                "address": "1-6-1 Yotsuya, Shinjuku-ku, Tokyo, 160-0004, Japan",
+                "latitude": 35.687574,
+                "longitude": 139.72922
+            }
+
+
+        }
+    }
+
+    thisFulfillmentMessages.push(mapObject);
+
+    var mapObject = {
+        payload: {
+            line:
+            {
+                "type": "flex",
+                "altText": "this is a flex message",
+                "contents": {
+                    "type": "bubble",
+                    "body": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": "hello"
+                            },
+                            {
+                                "type": "text",
+                                "text": "world"
+                            }
+                        ]
+                    }
+                }
+            }
+
+
+        }
+    }
+
+    thisFulfillmentMessages.push(mapObject);
+
+    var thisLineObject = {
+        payload: {
+            line: {
+                type: "template",
+                altText: "this is a carousel template",
+                template: {
+                    type: "carousel",
+                    columns: []
+                }
+            }
+        }
+    };
+
+    for (var x = 0; x < body.recordset.length; x++) {
+        var thisObject = {};
+        thisObject.thumbnailImageUrl = body.recordset[x].Photo;
+        thisObject.imageBackgroundColor = "#FFFFFF";
+        thisObject.title = body.recordset[x].Name;
+        thisObject.text = body.recordset[x].Category;
+        thisObject.defaultAction = {};
+        thisObject.defaultAction.type = "uri";
+        thisObject.defaultAction.label = "view detail";
+        thisObject.defaultAction.uri = body.recordset[x].Photo;
+        thisObject.actions = [];
+        var thisActionObject = {};
+        thisActionObject.type = "uri";
+        thisActionObject.label = "view detail";
+        thisActionObject.uri = body.recordset[x].Photo;
+        thisObject.actions.push(thisActionObject);
+        thisLineObject.payload.line.template.columns.push(thisObject);
+    }
+
+    thisFulfillmentMessages.push(thisLineObject);
+    var responseObject = {
+        fulfillmentMessages: thisFulfillmentMessages
+    };
+    res.json(responseObject);
 }
